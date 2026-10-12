@@ -3,27 +3,38 @@
     {
       "id": "1",
       "title": "Learn React components",
+      "description": "Review the basics of building React components.",
       "completed": true
     },
     {
       "title": "study",
+      "description": "",
       "completed": true,
       "id": "85GMMd6XZ3s"
     },
     {
       "title": "Refresh test",
+      "description": "",
       "completed": true,
       "id": "cf-ITpokrHI"
     },
     {
       "title": "study",
+      "description": "",
       "completed": false,
       "id": "mCayygWoTZk"
     },
     {
       "title": "eat",
+      "description": "",
       "completed": false,
       "id": "U_P-Rr9-cVU"
+    },
+    {
+      "title": "eat",
+      "description": "dinner",
+      "completed": false,
+      "id": "VbpY7_WV3ZQ"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

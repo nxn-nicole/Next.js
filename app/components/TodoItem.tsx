@@ -12,16 +12,19 @@ export default function TodoItem({ todo, onToggle, onDelete }: TodoItemProps) {
   return (
     <li>
       <Card>
-        <CardContent className="flex items-center gap-3">
+        <CardContent className="flex items-start gap-3">
           <input
             className="h-4 w-4 accent-blue-600"
             type="checkbox"
             checked={todo.completed}
             onChange={() => onToggle(todo)}
           />
-          <span className={todo.completed ? 'text-gray-400 line-through' : 'text-gray-800'}>
-            {todo.title}
-          </span>
+          <div className="min-w-0">
+            <p className={todo.completed ? 'text-gray-400 line-through' : 'text-gray-800'}>
+              {todo.title}
+            </p>
+            <p className="mt-1 text-sm text-gray-500">{todo.description}</p>
+          </div>
           <Button
             className="ml-auto"
             variant="outline"
