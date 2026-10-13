@@ -89,8 +89,9 @@ export default function AddTaskPage() {
             <button
               className="rounded-lg bg-blue-600 px-4 py-2 font-medium text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-gray-300"
               type="submit"
+              disabled={createTodoMutation.isPending}
             >
-              Save
+              {createTodoMutation.isPending ? 'Saving...' : 'Save'}
             </button>
           </div>
         </form>

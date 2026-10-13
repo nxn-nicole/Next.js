@@ -6,9 +6,10 @@ interface TodoItemProps {
   todo: Todo
   onToggle: (todo: Todo) => void
   onDelete: (id: Todo['id']) => void
+  disabled?: boolean
 }
 
-export default function TodoItem({ todo, onToggle, onDelete }: TodoItemProps) {
+export default function TodoItem({ todo, onToggle, onDelete, disabled = false }: TodoItemProps) {
   return (
     <li>
       <Card>
@@ -17,6 +18,7 @@ export default function TodoItem({ todo, onToggle, onDelete }: TodoItemProps) {
             className="h-4 w-4 accent-blue-600"
             type="checkbox"
             checked={todo.completed}
+            disabled={disabled}
             onChange={() => onToggle(todo)}
           />
           <div className="min-w-0">
@@ -29,6 +31,7 @@ export default function TodoItem({ todo, onToggle, onDelete }: TodoItemProps) {
             className="ml-auto"
             variant="outline"
             size="sm"
+            disabled={disabled}
             onClick={() => onDelete(todo.id)}
           >
             Delete
