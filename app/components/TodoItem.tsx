@@ -1,7 +1,7 @@
 import type { Todo } from '../types'
 import { Button } from '../../components/ui/button'
 import { Card, CardContent } from '../../components/ui/card'
-
+// if you are going to use pascal case for file then use it everywhere
 interface TodoItemProps {
   todo: Todo
   onToggle: (todo: Todo) => void
