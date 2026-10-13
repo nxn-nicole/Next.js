@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
@@ -17,6 +18,7 @@ import { taskSchema, type TaskFormData } from './schema'
 
 export default function AddTaskPage() {
   const router = useRouter()
+  const queryClient = useQueryClient()
   const {
     register,
     handleSubmit,
@@ -27,22 +29,26 @@ export default function AddTaskPage() {
     resolver: zodResolver(taskSchema),
   })
 
-  async function onSubmit(data: TaskFormData) {
-    try {
-      await createTodo({
-        title: data.title,
-        description: data.description,
-        completed: false,
-      })
-
+  const createTodoMutation = useMutation({
+    mutationFn: createTodo,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['todos'] })
       reset()
       router.push('/')
-      router.refresh()
-    } catch {
+    },
+    onError: () => {
       setError('root', {
         message: 'Could not save the task. Please try again.',
       })
-    }
+    },
+  })
+
+  function onSubmit(data: TaskFormData) {
+    createTodoMutation.mutate({
+      title: data.title,
+      description: data.description,
+      completed: false,
+    })
   }
 
   return (

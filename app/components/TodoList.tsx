@@ -1,32 +1,37 @@
 'use client'
 
-import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { deleteTodo, updateTodo } from '../lib/api'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { deleteTodo, getAllTodos, updateTodo } from '../lib/api'
 import type { Todo } from '../types'
 import { Button } from '../../components/ui/button'
 import TodoItem from './TodoItem'
 
-interface TodoListProps {
-  initialTodos: Todo[]
-}
-
-export default function TodoList({ initialTodos }: TodoListProps) {
+export default function TodoList() {
   const router = useRouter()
-  const [todos, setTodos] = useState(initialTodos)
+  const queryClient = useQueryClient()
+  const { data: todos = [], isPending, isError } = useQuery({
+    queryKey: ['todos'],
+    queryFn: getAllTodos,
+  })
 
-  async function handleToggle(todo: Todo) {
-    const updatedTodo = await updateTodo(todo.id, !todo.completed)
-    setTodos((currentTodos) =>
-      currentTodos.map((currentTodo) =>
-        currentTodo.id === updatedTodo.id ? updatedTodo : currentTodo,
-      ),
-    )
+  const updateTodoMutation = useMutation({
+    mutationFn: ({ id, completed }: { id: Todo['id']; completed: boolean }) =>
+      updateTodo(id, completed),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['todos'] }),
+  })
+
+  const deleteTodoMutation = useMutation({
+    mutationFn: deleteTodo,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['todos'] }),
+  })
+
+  function handleToggle(todo: Todo) {
+    updateTodoMutation.mutate({ id: todo.id, completed: !todo.completed })
   }
 
-  async function handleDelete(id: Todo['id']) {
-    await deleteTodo(id)
-    setTodos((currentTodos) => currentTodos.filter((todo) => todo.id !== id))
+  function handleDelete(id: Todo['id']) {
+    deleteTodoMutation.mutate(id)
   }
 
   return (
@@ -38,11 +43,15 @@ export default function TodoList({ initialTodos }: TodoListProps) {
         Add Task
       </Button>
 
-      <ul className="space-y-3">
-        {todos.map((todo) => (
-          <TodoItem key={todo.id} todo={todo} onToggle={handleToggle} onDelete={handleDelete} />
-        ))}
-      </ul>
+      {isPending && <p>Loading your tasks...</p>}
+      {isError && <p role="alert">Could not load tasks.</p>}
+      {!isPending && !isError && (
+        <ul className="space-y-3">
+          {todos.map((todo) => (
+            <TodoItem key={todo.id} todo={todo} onToggle={handleToggle} onDelete={handleDelete} />
+          ))}
+        </ul>
+      )}
     </>
   )
 }
