@@ -21,7 +21,7 @@ export function useTodos() {
     mutationFn: deleteTodo,
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['todos'] }),
   })
-
+// usually we don't put this function inside hook. you can do it while returning
   function handleToggle(todo: Todo) {
     updateTodoMutation.mutate({ id: todo.id, completed: !todo.completed })
   }
