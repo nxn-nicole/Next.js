@@ -1,7 +1,9 @@
 import type { Todo } from '../types'
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001'
+
 export async function getAllTodos(): Promise<Todo[]> {
-  const response = await fetch('http://localhost:3001/todos', {
+  const response = await fetch(`${API_URL}/todos`, {
     cache: 'no-store',
   })
 
@@ -13,7 +15,7 @@ export async function getAllTodos(): Promise<Todo[]> {
 }
 
 export async function createTodo(todo: Omit<Todo, 'id'>): Promise<Todo> {
-  const response = await fetch('http://localhost:3001/todos', {
+  const response = await fetch(`${API_URL}/todos`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -29,7 +31,7 @@ export async function createTodo(todo: Omit<Todo, 'id'>): Promise<Todo> {
 }
 
 export async function updateTodo(id: Todo['id'], completed: boolean): Promise<Todo> {
-  const response = await fetch(`http://localhost:3001/todos/${id}`, {
+  const response = await fetch(`${API_URL}/todos/${id}`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
@@ -45,7 +47,7 @@ export async function updateTodo(id: Todo['id'], completed: boolean): Promise<To
 }
 
 export async function deleteTodo(id: Todo['id']): Promise<void> {
-  const response = await fetch(`http://localhost:3001/todos/${id}`, {
+  const response = await fetch(`${API_URL}/todos/${id}`, {
     method: 'DELETE',
   })
 
